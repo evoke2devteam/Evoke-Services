@@ -9,7 +9,7 @@ api.post('/approve-transaction', auth.isAuth, celebrate({
         addressfrom: Joi.string().required(),
         //privatekey: Joi.string().required(),
         addressto: Joi.string().required(),
-        amount: Joi.number().integer().required()
+        amount: Joi.string().required()
     }).unknown()
 }), (err, req, res, next) => {
     res.status(400).send({ status: false, message: 'Missing data to send' });

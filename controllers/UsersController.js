@@ -21,8 +21,9 @@ function login(req, res) {
                 return await userBlockchainAPI();
             }
             userBC.call().then((result) => {
+                console.log(result);
                 const keyVault = async () => {
-                    return await keyVaultAPI(result.address, result.privatekey);
+                    return await keyVaultAPI(result.address, result.privateKey.substr(2));
                 }
                 keyVault.call().then((result2) => {
                     if (result2.status) {
@@ -53,6 +54,7 @@ function login(req, res) {
                     res.status(500).send({ status: false, message: 'Fail to save private key', error: err2 });
                 });
             }).catch((err) => {
+                console.log(err);
                 res.status(500).send({ status: false, message: 'Faild to create a BC user', error: err });
             });
         }
@@ -63,7 +65,7 @@ function userBlockchainAPI() {
     return new Promise((res, rej) => {
         request.post({
             headers: { 'content-type': 'application/json' },
-            url: 'http://172.18.0.14/user/create_account',
+            url: 'http://localhost:3001/user/create_account',
             json: true
         }, (error, response, body) => {
             if (!error && response.statusCode == 200) {
@@ -80,16 +82,16 @@ function keyVaultAPI(address, secret) {
         request.post({
             headers: { 'content-type': 'application/json' },
             url: 'http://40.117.251.59:5002/create-key',
-            body: JSON.stringify({
+            body: {
                 'name': address,
                 'value': secret
-            }),
+            },
             json: true
         }, (error, response, body) => {
             if (!error && response.statusCode == 200) {
                 res(body);
             } else {
-                rej(error);
+                rej(body);
             }
         });
     })

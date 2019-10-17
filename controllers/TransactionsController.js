@@ -1,7 +1,7 @@
 const userModel = require('../models/UsersModel');
+const request = require('request');
 
 function approveTransaction(req, res) {
-    res.status(200).send({ status: true, message: 'API ready' });
     userModel.findOne({ id_gg: req.body.addressfrom }, (err, data) => {
         if (err) {
             res.status(500).send({ status: false, message: 'Fail to find addres from' });
@@ -17,6 +17,8 @@ function approveTransaction(req, res) {
                     }
                     keyVault.call().then((result) => {
                         const privatekey = result.data.value;
+                        console.log(privatekey);
+                        
                         const BCTransfer = async () => {
                             return await transferBlockchainApi(addressfrom, privatekey, addressto, req.body.amount);
                         }
@@ -26,7 +28,7 @@ function approveTransaction(req, res) {
                             res.status(500).send({ status: false, message: 'Fail in transaction', error: err2 });
                         });
                     }).catch((err) => {
-                        res.status(500).send({ status: false, message: 'Fail to find secrte key', error: err });
+                        res.status(500).send({ status: false, message: 'Fail to find secrte key' });
                     });
                 } else {
                     res.status(404).send({ status: false, message: 'Address to not found' });
@@ -43,13 +45,14 @@ function balanceOf(req, res) {
         if (err) {
             res.status(500).send({ status: false, message: 'Fail to find id' });
         } else if (data) {
-            const BCValanceOf = async () => {
+            console.log(data.id_bc);
+            const BCBalanceOf = async () => {
                 return await balanceOfAPI(data.id_bc);
             }
-            BCValanceOf.call().then((result) => {
-                res.status(200).send({ status: true, message: 'Successful transaction', data: result.balance });
-            }).catch((err) => {
-                res.status(500).send({ status: false, message: 'Fail to balance of', error: err });
+            BCBalanceOf.call().then((result) => {
+                res.status(200).send({ status: true, message: 'Successful balance', data: result.ruby });
+            }).catch((err2) => {
+                res.status(500).send({ status: false, message: 'Fail to balance of', error: err2 });
             });
         } else {
             res.status(404).send({ status: false, message: 'Id not found' });
@@ -62,10 +65,9 @@ function findKeyVault(address) {
         request.post({
             headers: { 'content-type': 'application/json' },
             url: 'http://40.117.251.59:5002/show-key',
-            data: JSON.stringify({
-                id: address
-            }),
-            json: true
+            json: {
+                'id': address
+            }
         }, (error, response, body) => {
             if (!error && response.statusCode == 200) {
                 res(body);
@@ -80,14 +82,13 @@ function transferBlockchainApi(addressfrom, privatekey, addressto, amount) {
     return new Promise((res, rej) => {
         request.post({
             headers: { 'content-type': 'application/json' },
-            url: 'http://172.18.0.14/evocoin/transfer',
-            data: JSON.stringify({
+            url: 'http://localhost:3001/ruby/transfer',
+            json: {
                 addressfrom: addressfrom,
                 privatekey: privatekey,
                 addressto: addressto,
                 amount: amount
-            }),
-            json: true
+            }
         }, (error, response, body) => {
             if (!error && response.statusCode == 200) {
                 res(body);
@@ -102,16 +103,15 @@ function balanceOfAPI(address) {
     return new Promise((res, rej) => {
         request.post({
             headers: { 'content-type': 'application/json' },
-            url: 'http://172.18.0.14/evocoin/balanceOf',
-            data: JSON.stringify({
+            url: 'http://localhost:3001/ruby/balanceOf',
+            json: {
                 address: address
-            }),
-            json: true
+            }
         }, (error, response, body) => {
             if (!error && response.statusCode == 200) {
                 res(body);
             } else {
-                rej(error);
+                rej(body);
             }
         });
     });

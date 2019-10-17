@@ -7,4 +7,4 @@
 5. Dentro de la terminal anterior escribir: **use evoke;**
 6. Para verificar que todo haya quedado bien escribir: **show dbs;**
 7. Debería aparecer *evoke*
-8. Puede cerrar la terminal donde ejecuto el comando **mongo** pero debe dejat conrriendo la que tiene **mongod**
+8. Puede cerrar la terminal donde ejecuto el comando **mongo** pero debe dejar conrriendo la que tiene **mongod**

@@ -21,25 +21,36 @@ function login(req, res) {
                 return await userBlockchainAPI();
             }
             userBC.call().then((result) => {
-                UserModel.create({
-                    id_gg: req.body.id_gg,
-                    id_bc: result.address,
-                    id_sb: makeRandom(9),
-                    firstName: req.body.firstName,
-                    email: req.body.email
-                }, (err2, data2) => {
-                    if (err2) {
-                        res.status(500).send({ status: false, message: 'Faild to create a user' });
+                const keyVault = async () => {
+                    return await keyVaultAPI(result.address, result.privatekey);
+                }
+                keyVault.call().then((result2) => {
+                    if (result2.status) {
+                        UserModel.create({
+                            id_gg: req.body.id_gg,
+                            id_bc: result.address,
+                            id_sb: makeRandom(9),
+                            firstName: req.body.firstName,
+                            email: req.body.email
+                        }, (err2, data2) => {
+                            if (err2) {
+                                res.status(500).send({ status: false, message: 'Faild to create a user' });
+                            } else {
+                                res.status(200).send({
+                                    status: true,
+                                    data: {
+                                        id_bc: data2.id_bc,
+                                        id_sb: data2.id_sb
+                                    },
+                                    token: Auth.createToken(req.body.id_gg)
+                                });
+                            }
+                        });   
                     } else {
-                        res.status(200).send({
-                            status: true,
-                            data: {
-                                id_bc: data2.id_bc,
-                                id_sb: data2.id_sb
-                            },
-                            token: Auth.createToken(req.body.id_gg)
-                        });
+                        res.status(500).send({ status: false, message: result2.message });
                     }
+                }).catch((err2) => {
+                    res.status(500).send({ status: false, message: 'Fail to save private key', error: err2 });
                 });
             }).catch((err) => {
                 res.status(500).send({ status: false, message: 'Faild to create a BC user', error: err });

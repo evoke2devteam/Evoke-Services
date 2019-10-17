@@ -2,8 +2,9 @@ const express = require('express');
 const api = express.Router();
 const { celebrate, Joi } = require('celebrate');
 const UserController = require('../controllers/UsersController');
+const google = require('../middleware/AuthGooogle');
 
-api.post('/login', celebrate({
+api.post('/login', google.authGoogle, celebrate({
     body: Joi.object().keys({
         id_gg: Joi.string().required(),
         firstName: Joi.string().required(),

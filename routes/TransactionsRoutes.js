@@ -15,4 +15,12 @@ api.post('/approve-transaction', auth.isAuth, celebrate({
     res.status(400).send({ status: false, message: 'Missing data to send' });
 }, TransactionController.approveTransaction);
 
+api.post('/balance-of', auth.isAuth, celebrate({
+    body: Joi.object().keys({
+        id: Joi.string().required()
+    }).unknown()
+}), (err, req, res, next) => {
+    res.status(400).send({ status: false, message: 'Missing data to send' });
+}, TransactionController.balanceOf);
+
 module.exports = api;

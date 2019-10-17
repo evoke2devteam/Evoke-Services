@@ -43,13 +43,13 @@ function balanceOf(req, res) {
         if (err) {
             res.status(500).send({ status: false, message: 'Fail to find id' });
         } else if (data) {
-            const keyVault = async () => {
-                return await findKeyVault(data.id_bc);
+            const BCValanceOf = async () => {
+                return await balanceOfAPI(data.id_bc);
             }
-            keyVault.catch().then((result) => {
-                
-            }).catch((error) => {
-                res.status(500).send({ status: false, message: 'Fail to find secrte key', error: err });
+            BCValanceOf.call().then((result) => {
+                res.status(200).send({ status: true, message: 'Successful transaction', data: result.balance });
+            }).catch((err) => {
+                res.status(500).send({ status: false, message: 'Fail to balance of', error: err });
             });
         } else {
             res.status(404).send({ status: false, message: 'Id not found' });
@@ -98,7 +98,27 @@ function transferBlockchainApi(addressfrom, privatekey, addressto, amount) {
     });
 }
 
+function balanceOfAPI(address) {
+    return new Promise((res, rej) => {
+        request.post({
+            headers: { 'content-type': 'application/json' },
+            url: 'http://172.18.0.14/evocoin/balanceOf',
+            data: JSON.stringify({
+                address: address
+            }),
+            json: true
+        }, (error, response, body) => {
+            if (!error && response.statusCode == 200) {
+                res(body);
+            } else {
+                rej(error);
+            }
+        });
+    });
+}
+
 
 module.exports = {
-    approveTransaction
+    approveTransaction,
+    balanceOf
 };

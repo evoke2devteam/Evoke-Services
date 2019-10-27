@@ -11,7 +11,7 @@ function authGoogle(req, res, next) {
         return next();
     }).catch((err) => {
         console.log(err);
-        return res.status(401).send({ status: false, message: 'Authentication failed' });
+        return res.status(401).send({ status: false, message: 'Authentication failed', error: err });
     });
 }
 

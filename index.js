@@ -7,6 +7,7 @@ const db = require('./config/db');
 const UserRoutes = require('./routes/UserRoutes');
 const TransactionRoutes = require('./routes/TransactionsRoutes');
 const EvidenceRoutes = require('./routes/EvidenceRoutes');
+const InvitationRoutes = require('./routes/InvitationCodeRoutes');
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -18,6 +19,7 @@ mongoose.connect(`mongodb://${db.host}:${db.port}/${db.database}`, { useUnifiedT
 app.use(UserRoutes);
 app.use(TransactionRoutes);
 app.use(EvidenceRoutes);
+app.use(InvitationRoutes);
 
 app.listen(3000, () => {
     console.log("Server Run");

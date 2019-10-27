@@ -15,7 +15,7 @@ api.post('/create-evidence', auth.isAuth, celebrate({
     res.status(400).send({ status: false, message: 'Missing data to send' });
 }, EvidenceController.createEvidence);
 
-api.post('/create-comment', celebrate({
+api.post('/create-comment', auth.isAuth, celebrate({
     body: Joi.object().keys({
         id_gg: Joi.string().required(),
         message: Joi.string().required(),
@@ -25,5 +25,14 @@ api.post('/create-comment', celebrate({
 }), (err, req, res, next) => {
     res.status(400).send({ status: false, message: 'Missing data to send' });
 }, EvidenceController.createComment);
+
+api.post('/list-evidences-user', auth.isAuth, celebrate({
+    body: Joi.object().keys({
+        id_gg: Joi.string().required(),
+        id_mission: Joi.string().required()
+    }).unknown()
+}), (err, req, res, next) => {
+    res.status(400).send({ status: false, message: 'Missing data to send' });
+}, EvidenceController.showEvidences);
 
 module.exports = api;

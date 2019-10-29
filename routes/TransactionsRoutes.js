@@ -4,7 +4,7 @@ const auth = require('../middleware/Auth');
 const TransactionController = require('../controllers/TransactionsController');
 const { celebrate, Joi } = require('celebrate');
 
-api.post('/approve-transaction', auth.isAuth, celebrate({
+api.post('/approve_transaction', auth.isAuth, celebrate({
     body: Joi.object().keys({
         addressfrom: Joi.string().required(),
         //privatekey: Joi.string().required(),
@@ -17,7 +17,7 @@ api.post('/approve-transaction', auth.isAuth, celebrate({
 
 api.post('/balance-of', auth.isAuth, celebrate({
     body: Joi.object().keys({
-        id: Joi.string().required()
+        id_gg: Joi.string().required()
     }).unknown()
 }), (err, req, res, next) => {
     res.status(400).send({ status: false, message: 'Missing data to send' });

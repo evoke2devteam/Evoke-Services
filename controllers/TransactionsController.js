@@ -41,7 +41,7 @@ function approveTransaction(req, res) {
 }
 
 function balanceOf(req, res) {
-    userModel.findOne({ id_gg: req.body.id }, (err, data) => {
+    userModel.findOne({ id_gg: req.body.id_gg }, (err, data) => {
         if (err) {
             res.status(500).send({ status: false, message: 'Fail to find id' });
         } else if (data) {
@@ -49,10 +49,17 @@ function balanceOf(req, res) {
             const BCBalanceOf = async () => {
                 return await balanceOfAPI(data.id_bc);
             }
-            BCBalanceOf.call().then((result) => {
-                res.status(200).send({ status: true, message: 'Successful balance', data: result.ruby });
+            BCBalanceOfRuby = async () => {
+                return await balanceOfAPIRuby(data.id_bc);
+            }
+            BCBalanceOf.call().then((resultEvocoin) => {
+                BCBalanceOfRuby.call().then((resultRuby) => {
+                    res.status(200).send({ status: true, message: 'Successful balance', evocoin: resultEvocoin.evocoin, rubies: resultRuby.ruby });
+                }).catch((err3) => {
+                    res.status(500).send({ status: false, message: 'Fail to balance of Rubies', error: err3 });
+                });
             }).catch((err2) => {
-                res.status(500).send({ status: false, message: 'Fail to balance of', error: err2 });
+                res.status(500).send({ status: false, message: 'Fail to balance of Evocoin', error: err2 });
             });
         } else {
             res.status(404).send({ status: false, message: 'Id not found' });
@@ -82,7 +89,7 @@ function transferBlockchainApi(addressfrom, privatekey, addressto, amount) {
     return new Promise((res, rej) => {
         request.post({
             headers: { 'content-type': 'application/json' },
-            url: 'http://localhost:3001/ruby/transfer',
+            url: 'http://localhost:3001/evocoin/transfer',
             json: {
                 addressfrom: addressfrom,
                 privatekey: privatekey,
@@ -103,7 +110,25 @@ function balanceOfAPI(address) {
     return new Promise((res, rej) => {
         request.post({
             headers: { 'content-type': 'application/json' },
-            url: 'http://localhost:3001/ruby/balanceOf',
+            url: 'http://172.18.0.22:3001/evocoin/balanceOf',
+            json: {
+                address: address
+            }
+        }, (error, response, body) => {
+            if (!error && response.statusCode == 200) {
+                res(body);
+            } else {
+                rej(body);
+            }
+        });
+    });
+}
+
+function balanceOfAPIRuby(address) {
+    return new Promise((res, rej) => {
+        request.post({
+            headers: { 'content-type': 'application/json' },
+            url: 'http://172.18.0.22:3001/ruby/balanceOf',
             json: {
                 address: address
             }

@@ -65,7 +65,7 @@ function userBlockchainAPI() {
     return new Promise((res, rej) => {
         request.post({
             headers: { 'content-type': 'application/json' },
-            url: 'http://localhost:3001/user/create_account',
+            url: 'http://172.18.0.22:3001/user/create_account',
             json: true
         }, (error, response, body) => {
             if (!error && response.statusCode == 200) {

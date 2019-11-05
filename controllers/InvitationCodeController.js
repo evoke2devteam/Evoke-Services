@@ -1,11 +1,12 @@
 const InvitationCode = require('../models/InvitationCodeModel');
 
 function generateCode(req, res) {
-    InvitationCode.create({ code: makeCode(20) }, (err, data) => {
+    const code = makeCode(20);
+    InvitationCode.create({ code: code }, (err, data) => {
         if (err) {
             res.status(500).send({ status: false, message: 'Fail to generate code' });
         } else {
-            res.status(200).send({ status: true, message: 'Code generate successfully' })
+            res.status(200).send({ status: true, message: 'Code generate successfully', code: code })
         }
     });
 }

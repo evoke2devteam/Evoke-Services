@@ -4,12 +4,14 @@ const auth = require('../middleware/Auth');
 const EvidenceController = require('../controllers/EvidenceController');
 const { celebrate, Joi } = require('celebrate');
 
-api.post('/create-evidence', auth.isAuth, celebrate({
+api.post('/create-evidence', celebrate({
     body: Joi.object().keys({
         id_gg_drive: Joi.string().required(),
         name: Joi.string().required(),
         id_gg: Joi.string().required(),
-        id_mission: Joi.string().required()
+        id_mission: Joi.string().required(),
+        url: Joi.string().required(),
+        description: Joi.string().required()
     }).unknown()
 }), (err, req, res, next) => {
     res.status(400).send({ status: false, message: 'Missing data to send' });

@@ -89,7 +89,7 @@ function transferBlockchainApi(addressfrom, privatekey, addressto, amount) {
     return new Promise((res, rej) => {
         request.post({
             headers: { 'content-type': 'application/json' },
-            url: 'http://localhost:3001/evocoin/transfer',
+            url: 'http://172.18.0.22:3001/evocoin/transfer',
             json: {
                 addressfrom: addressfrom,
                 privatekey: privatekey,

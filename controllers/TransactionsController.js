@@ -18,15 +18,27 @@ function approveTransaction(req, res) {
                     keyVault.call().then((result) => {
                         const privatekey = result.data.value;
                         console.log(privatekey);
-                        
-                        const BCTransfer = async () => {
-                            return await transferBlockchainApi(addressfrom, privatekey, addressto, req.body.amount);
+                        if (req.body.type == 'Evocoin') {
+                            const BCTransferEvocoin = async () => {
+                                return await transferEvocoinAPI(addressfrom, privatekey, addressto, req.body.amount);
+                            }
+                            BCTransferEvocoin.call().then((result2) => {
+                                res.status(200).send({ status: true, message: 'Successful Evocoin transaction' });
+                            }).catch((err2) => {
+                                res.status(500).send({ status: false, message: 'Fail in Evocoin transaction', error: err2 });
+                            });
+                        } else if(req.body.type == 'Ruby'){
+                            const BCTransferRuby = async () => {
+                                return await transferRubyAPI(addressfrom, privatekey, addressto, req.body.amount);
+                            }
+                            BCTransferRuby.call().then(result3 => {
+                                res.status(200).send({ status: true, message: 'Successful Ruby transaction' });
+                            }).catch(err3 => {
+                                res.status(500).send({ status: false, message: 'Fail in Ruby transaction', error: err3 });
+                            });
+                        } else {
+                            res.status(400).send({ status: false, message: 'Invalid type of transaction' });
                         }
-                        BCTransfer.call().then((result2) => {
-                            res.status(200).send({ status: true, message: 'Successful transaction' });
-                        }).catch((err2) => {
-                            res.status(500).send({ status: false, message: 'Fail in transaction', error: err2 });
-                        });
                     }).catch((err) => {
                         res.status(500).send({ status: false, message: 'Fail to find secrte key' });
                     });
@@ -85,11 +97,32 @@ function findKeyVault(address) {
     });
 }
 
-function transferBlockchainApi(addressfrom, privatekey, addressto, amount) {
+function transferEvocoinAPI(addressfrom, privatekey, addressto, amount) {
     return new Promise((res, rej) => {
         request.post({
             headers: { 'content-type': 'application/json' },
             url: 'http://172.18.0.22:3001/evocoin/transfer',
+            json: {
+                addressfrom: addressfrom,
+                privatekey: privatekey,
+                addressto: addressto,
+                amount: amount
+            }
+        }, (error, response, body) => {
+            if (!error && response.statusCode == 200) {
+                res(body);
+            } else {
+                rej(error);
+            }
+        });
+    });
+}
+
+function transferRubyAPI(addressfrom, privatekey, addressto, amount) {
+    return new Promise((res, rej) => {
+        request.post({
+            headers: { 'content-type': 'application/json' },
+            url: 'http://172.18.0.22:3001/ruby/transfer',
             json: {
                 addressfrom: addressfrom,
                 privatekey: privatekey,

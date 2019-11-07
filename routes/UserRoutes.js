@@ -8,6 +8,7 @@ api.post('/login', google.authGoogle, celebrate({
     body: Joi.object().keys({
         id_gg: Joi.string().required(),
         firstName: Joi.string().required(),
+        lastName: Joi.string().required(),
         email: Joi.string().email().required()
     }).unknown()
 }), (err, req, res, next) => {

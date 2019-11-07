@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const Users = new Schema({
     id_gg: String,
     id_bc: String,
-    id_sb: String,
+    id_moodle: String,
     firstName: String,
     email: String,
     status: { type: Boolean, default: true }

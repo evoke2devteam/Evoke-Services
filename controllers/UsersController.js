@@ -10,9 +10,8 @@ function login(req, res) {
             res.status(200).send({
                 status: true,
                 data: {
-                    id_gg: data.id_gg,
                     id_bc: data.id_bc,
-                    id_sb: data.id_sb
+                    id_moodle: data.id_moodle
                 },
                 token: Auth.createToken(req.body.id_gg)
             });
@@ -108,26 +107,16 @@ function createUserMoodleAPI(email, firstName, lastName, password) {
     return new Promise((res, rej) => {
         request.post({
             headers: { 'content-type': 'application/json' },
-            url: `http://evoke.moodlecloud.com/webservice/rest/server.php?wstoken=db948bcd784b9b857dc527007526e0e6&moodlewsrestformat=json&wsfunction=core_user_create_users&users[0][username]=${email}&users[0][email]=${email}&users[0][lastname]=${lastName}&users[0][firstname]=${firstName}&users[0][password]=${password}`,
+            url: `https://evoke.moodlecloud.com/webservice/rest/server.php?wstoken=db948bcd784b9b857dc527007526e0e6&moodlewsrestformat=json&wsfunction=core_user_create_users&users[0][username]=${email}&users[0][email]=${email}&users[0][lastname]=${lastName}&users[0][firstname]=${firstName}&users[0][password]=${password}`,
             json: true
         }, (error, response, body) => {
             if (!error && response.statusCode == 200) {
                 res(body);
             } else {
                 rej(error);
-            }
+            }   
         });
     });
-}
-
-function makeRandom(length) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
 }
 
 module.exports = {

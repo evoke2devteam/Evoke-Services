@@ -8,6 +8,7 @@ const UserRoutes = require('./routes/UserRoutes');
 const TransactionRoutes = require('./routes/TransactionsRoutes');
 const EvidenceRoutes = require('./routes/EvidenceRoutes');
 const InvitationRoutes = require('./routes/InvitationCodeRoutes');
+const MoodleRoutes = require('./routes/MoodleRoutes');
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -20,6 +21,7 @@ app.use(UserRoutes);
 app.use(TransactionRoutes);
 app.use(EvidenceRoutes);
 app.use(InvitationRoutes);
+app.use(MoodleRoutes);
 
 app.listen(3000, () => {
     console.log("Server Run");

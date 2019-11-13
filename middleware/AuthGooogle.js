@@ -10,8 +10,7 @@ function authGoogle(req, res, next) {
     foo.verifyIdToken({ idToken: token }).then((res) => {
         return next();
     }).catch((err) => {
-        console.log(err);
-        return res.status(401).send({ status: false, message: 'Authentication failed', error: err });
+        return res.status(401).send({ status: false, message: 'Authentication failed' });
     });
 }
 

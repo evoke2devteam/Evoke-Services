@@ -6,7 +6,7 @@ const { celebrate, Joi } = require('celebrate');
 
 api.post('/get-courses', auth.isAuth, celebrate({
     body: Joi.object().keys({
-        courseid: Joi.string().required()
+        courseid: Joi.number().integer().required()
     }).unknown()
 }), (err, req, res, next) => {
     res.status(400).send({ status: false, message: 'Missing data to send' });

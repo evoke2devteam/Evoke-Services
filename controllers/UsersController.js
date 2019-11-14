@@ -20,7 +20,7 @@ function login(req, res) {
                 return await userBlockchainAPI();
             }
             userBC.call().then((result) => {
-                console.log(result);
+                //console.log(result);
                 const keyVault = async () => {
                     return await keyVaultAPI(result.address, result.privateKey.substr(2));
                 }
@@ -60,7 +60,7 @@ function login(req, res) {
                     res.status(500).send({ status: false, message: 'Fail to save private key', error: err2 });
                 });
             }).catch((err) => {
-                console.log(err);
+                //console.log(err);
                 res.status(500).send({ status: false, message: 'Faild to create a BC user', error: err });
             });
         }

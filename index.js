@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const db = require('./config/db');
+const db = require('./config_1/db');
 const UserRoutes = require('./routes/UserRoutes');
 const TransactionRoutes = require('./routes/TransactionsRoutes');
 const EvidenceRoutes = require('./routes/EvidenceRoutes');
@@ -11,6 +11,7 @@ const InvitationRoutes = require('./routes/InvitationCodeRoutes');
 const MoodleRoutes = require('./routes/MoodleRoutes');
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 mongoose.connect(`mongodb://${db.host}:${db.port}/${db.database}`, { useUnifiedTopology: true, useNewUrlParser: true }, (err, conn) => {

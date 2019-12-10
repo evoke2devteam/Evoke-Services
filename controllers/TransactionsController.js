@@ -53,23 +53,23 @@ function approveTransaction(req, res) {
 }
 
 function balanceOf(req, res) {
-    userModel.findOne({ id_gg: req.body.id_gg }, (err, data) => {
+    userModel.findOne({ id_moodle: req.body.id_moodle }, (err, data) => {
         if (err) {
             res.status(500).send({ status: false, message: 'Fail to find id' });
         } else if (data) {
-            console.log(data.id_bc);
+            //console.log(data.id_bc);
             const BCBalanceOf = async () => {
                 return await balanceOfAPI(data.id_bc);
             }
-            BCBalanceOfRuby = async () => {
-                return await balanceOfAPIRuby(data.id_bc);
-            }
+            //BCBalanceOfRuby = async () => {
+            //    return await balanceOfAPIRuby(data.id_bc);
+            //}
             BCBalanceOf.call().then((resultEvocoin) => {
-                BCBalanceOfRuby.call().then((resultRuby) => {
-                    res.status(200).send({ status: true, message: 'Successful balance', evocoin: resultEvocoin.evocoin, rubies: resultRuby.ruby });
-                }).catch((err3) => {
-                    res.status(500).send({ status: false, message: 'Fail to balance of Rubies', error: err3 });
-                });
+                //BCBalanceOfRuby.call().then((resultRuby) => {
+                    res.status(200).send({ status: true, message: 'Successful balance', evocoin: resultEvocoin.evocoin });
+                //}).catch((err3) => {
+                    //res.status(500).send({ status: false, message: 'Fail to balance of Rubies', error: err3 });
+                //});
             }).catch((err2) => {
                 res.status(500).send({ status: false, message: 'Fail to balance of Evocoin', error: err2 });
             });
@@ -117,7 +117,7 @@ function transferEvocoinAPI(addressfrom, privatekey, addressto, amount) {
         });
     });
 }
-
+/**
 function transferRubyAPI(addressfrom, privatekey, addressto, amount) {
     return new Promise((res, rej) => {
         request.post({
@@ -138,7 +138,7 @@ function transferRubyAPI(addressfrom, privatekey, addressto, amount) {
         });
     });
 }
-
+ */
 function balanceOfAPI(address) {
     return new Promise((res, rej) => {
         request.post({

@@ -18,7 +18,7 @@ api.post('/approve_transaction', auth.isAuth, celebrate({
 
 api.post('/balance-of', auth.isAuth, celebrate({
     body: Joi.object().keys({
-        id_gg: Joi.string().required()
+        id_moodle: Joi.string().required()
     }).unknown()
 }), (err, req, res, next) => {
     res.status(400).send({ status: false, message: 'Missing data to send' });

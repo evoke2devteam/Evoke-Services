@@ -24,4 +24,13 @@ api.post('/balance-of', auth.isAuth, celebrate({
     res.status(400).send({ status: false, message: 'Missing data to send' });
 }, TransactionController.balanceOf);
 
+api.post('/get-mission-score', auth.isAuth, TransactionController.getMissionScore);
+
+api.post('/get-mission-paid', auth.isAuth, TransactionController.getMissionPaid);
+
+api.post('/set-mission-score', auth.isAuth, TransactionController.setMissionScore);
+
+api.post('/pay-mission-score', auth.isAuth, TransactionController.payMissionScore);
+
+
 module.exports = api;

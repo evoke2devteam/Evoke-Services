@@ -117,6 +117,23 @@ function transferEvocoinAPI(addressfrom, privatekey, addressto, amount) {
         });
     });
 }
+
+function getMissionScore(req,res){
+    res.status(200).send({ status: true, message: 'API Works' });
+}
+
+function getMissionPaid(req,res){
+    res.status(200).send({ status: true, message: 'API Works' });
+}
+
+function setMissionScore(req,res){
+    res.status(200).send({ status: true, message: 'API Works' });
+}
+
+function payMissionScore(req,res){
+    res.status(200).send({ status: true, message: 'API Works' });
+}
+
 /**
 function transferRubyAPI(addressfrom, privatekey, addressto, amount) {
     return new Promise((res, rej) => {
@@ -175,8 +192,94 @@ function balanceOfAPIRuby(address) {
     });
 }
 
+function get_mission_score_reward(mission, score){
+    return new Promise((res, rej) => {
+        request.get({
+            headers: { 'content-type': 'application/json' },
+            url: 'http://172.18.0.22:3001/evocoin/get_mission_score_reward',
+            json: {
+                mission_id: mission,
+                score: score
+            }   
+        }, (error, response, body) => {
+            if (!error && response.statusCode == 200) {
+                res(body);
+            } else {
+                rej(body);
+            }
+        });
+    });
+}
+
+function get_mission_user_paid(mission, user){
+    return new Promise((res, rej) => {
+        request.get({
+            headers: { 'content-type': 'application/json' },
+            url: 'http://172.18.0.22:3001/evocoin/get_mission_user_paid',
+            json: {
+                mission_id: mission,
+                user: user
+            }  
+        },  (error, response, body) => {
+            if (!error && response.statusCode == 200) {
+                res(body);
+            } else {
+                rej(body);
+            }
+        });
+    })
+}
+
+function set_mission_score_reward(mission, score, reward){
+    return new Promise((res, rej) => {
+        request.post({
+            headers: { 'content-type': 'application/json' },
+            url: 'http://172.18.0.22:3001/evocoin/set_mission_score_reward',
+            json: {
+                addressfrom: '0xe401862558e44fa2547b66a6c1d50c8492718997',
+                privatekey: '57a29559e91df761c933986caf25debac5e21f4056d4487150cdcaab5cd37096',
+                mission_id: mission,
+                score: score,
+                reward: reward
+            }
+        }, (error, response, body) => {
+            if (!error && response.statusCode == 200) {
+                res(body);
+            } else {
+                rej(body);
+            }
+        });
+    });
+}
+
+//user: '0xd7B61E052bacbb0CE0b9F8E932C2362574cFEf7C'
+function pay_mission_score_user(mission, score, user){
+    return new Promise((res, rej) => {
+        request.post({
+            headers: { 'content-type': 'application/json' },
+            url: 'http://172.18.0.22:3001/evocoin/set_mission_score_reward',
+            json: {
+                addressfrom: '0xe401862558e44fa2547b66a6c1d50c8492718997',
+                privatekey: '57a29559e91df761c933986caf25debac5e21f4056d4487150cdcaab5cd37096',
+                mission_id: mission,
+                score: score,
+                user: user
+            }
+        }, (error, response, body) => {
+            if (!error && response.statusCode == 200) {
+                res(body);
+            } else {
+                rej(body);
+            }
+        });
+    });
+}
 
 module.exports = {
     approveTransaction,
-    balanceOf
+    balanceOf,
+    getMissionScore,
+    getMissionPaid,
+    setMissionScore,
+    payMissionScore
 };

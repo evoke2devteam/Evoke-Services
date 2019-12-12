@@ -12,4 +12,13 @@ api.post('/get-courses', auth.isAuth, celebrate({
     res.status(400).send({ status: false, message: 'Missing data to send' });
 }, MoodleController.getCourses);
 
+
+api.post('/get-states-user-activities', auth.isAuth, celebrate({
+    body: Joi.object().keys({
+        id: Joi.number().integer().required()
+    }).unknown()
+}), (err, req, res, next) => {
+    res.status(400).send({ status: false, message: 'Missing data to send' });
+}, MoodleController.listOfStatusUserByCourse);
+
 module.exports = api;

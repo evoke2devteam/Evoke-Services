@@ -127,7 +127,7 @@ function getMissionPaid(req,res){
 }
 
 async function setMissionScore(req,res){
-    set_mission_score_reward(req.body.mission, req.body.score, req.body.reward).then(data => {
+    set_mission_score_reward(req.body.mission_id, req.body.score, req.body.reward).then(data => {
         res.status(200).send({ status: true, message: data });
     }).catch(err => {
         res.status(500).send({ status: false, error: err });

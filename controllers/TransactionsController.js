@@ -119,7 +119,7 @@ function transferEvocoinAPI(addressfrom, privatekey, addressto, amount) {
 }
 
 function getMissionScore(req,res){
-    get_mission_score_reward(req.body.id_mission, req.body.score).then( data => {
+    get_mission_score_reward(req.body.mission_id, req.body.score).then( data => {
         res.status(200).send({ status: true, message: data });
     }).catch(err => {
         res.status(500).send({ status: false, error: err });

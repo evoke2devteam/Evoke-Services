@@ -28,7 +28,15 @@ api.post('/get-mission-score', auth.isAuth, TransactionController.getMissionScor
 
 api.post('/get-mission-paid', auth.isAuth, TransactionController.getMissionPaid);
 
-api.post('/set-mission-score', auth.isAuth, TransactionController.setMissionScore);
+api.post('/set-mission-score', auth.isAuth, celebrate({
+    body: Joi.object().keys({
+        mission_id: Joi.number().integer().required(),
+        score: Joi.number().integer().required(),
+        reward: Joi.number().integer().required()
+    }).unknown()
+}), (err, req, res, next) => {
+    res.status(400).send({ status: false, message: 'Missing data to send' });
+}, TransactionController.setMissionScore);
 
 api.post('/pay-mission-score', auth.isAuth, TransactionController.payMissionScore);
 

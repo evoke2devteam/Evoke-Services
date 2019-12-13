@@ -126,8 +126,12 @@ function getMissionPaid(req,res){
     res.status(200).send({ status: true, message: 'API Works' });
 }
 
-function setMissionScore(req,res){
-    res.status(200).send({ status: true, message: 'API Works' });
+async function setMissionScore(req,res){
+    set_mission_score_reward(req.body.mission, req.body.score, req.body.reward).then(data => {
+        res.status(200).send({ status: true, message: data });
+    }).catch(err => {
+        res.status(500).send({ status: false, error: err });
+    });
 }
 
 function payMissionScore(req,res){

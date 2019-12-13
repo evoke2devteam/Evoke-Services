@@ -30,11 +30,11 @@ function getCourses(req, res) {
 async function listOfStatusUserByCourse(req, res) {
     console.log('ok');
     try {
-        let courses = await core_enrol_get_enrolled_users(8);
+        let courses = await core_enrol_get_enrolled_users(req.body.id);
         let usersIdArray = [];
         if (courses.length > 0) {
             for (let i = 0; i < courses.length; i++) {
-                usersIdArray.push(core_completion_get_activities_completion_status(8, courses[i].id));
+                usersIdArray.push(core_completion_get_activities_completion_status(req.body.id, courses[i].id));
             }
             Promise.all(usersIdArray).then(data => {
                 for (let i = 0; i < data.length; i++) {

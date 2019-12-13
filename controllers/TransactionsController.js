@@ -119,7 +119,11 @@ function transferEvocoinAPI(addressfrom, privatekey, addressto, amount) {
 }
 
 function getMissionScore(req,res){
-    res.status(200).send({ status: true, message: 'API Works' });
+    get_mission_score_reward(req.body.id_mission, req.body.score).then( data => {
+        res.status(200).send({ status: true, message: data });
+    }).catch(err => {
+        res.status(500).send({ status: false, error: err });
+    });
 }
 
 function getMissionPaid(req,res){
@@ -159,12 +163,12 @@ function transferRubyAPI(addressfrom, privatekey, addressto, amount) {
         });
     });
 }
- */
-function balanceOfAPI(address) {
+
+function balanceOfAPIRuby(address) {
     return new Promise((res, rej) => {
         request.post({
             headers: { 'content-type': 'application/json' },
-            url: 'http://172.18.0.22:3001/evocoin/balanceOf',
+            url: 'http://172.18.0.22:3001/ruby/balanceOf',
             json: {
                 address: address
             }
@@ -178,11 +182,12 @@ function balanceOfAPI(address) {
     });
 }
 
-function balanceOfAPIRuby(address) {
+ */
+function balanceOfAPI(address) {
     return new Promise((res, rej) => {
         request.post({
             headers: { 'content-type': 'application/json' },
-            url: 'http://172.18.0.22:3001/ruby/balanceOf',
+            url: 'http://172.18.0.22:3001/evocoin/balanceOf',
             json: {
                 address: address
             }

@@ -3,7 +3,7 @@ const request = require('request');
 function getCourses(req, res) {
     request.post({
         headers: { 'content-type': 'application/json' },
-        url: `https://evoke.moodlecloud.com/webservice/rest/server.php?wstoken=db948bcd784b9b857dc527007526e0e6&moodlewsrestformat=json&wsfunction=mod_choice_get_choices_by_courses&courseids[0]=${req.body.courseid}`,
+        url: `https://evoke-colombia.moodle.school/webservice/rest/server.php?wstoken=db948bcd784b9b857dc527007526e0e6&moodlewsrestformat=json&wsfunction=mod_choice_get_choices_by_courses&courseids[0]=${req.body.courseid}`,
         json: true
     }, (error, response, body) => {
         if (!error) {
@@ -13,13 +13,14 @@ function getCourses(req, res) {
                 arrayOptions.push(getChoices(body.choices[i].id));
             }
             Promise.all(arrayOptions).then(data => {
-                console.log(data);
+                //console.log(data);
                 for (let i = 0; i < data.length; i++) {
                     body.choices[i].options = data[i].options;
                 }
                 res.status(200).send({ status: true, choices: body.choices });
             }).catch(err => {
-                console.log(err)
+                //console.log(err);
+                res.status(500).send({ status: false, error: err });
             });
         } else {
             res.status(response.statusCode).send({ status: false, error });
@@ -28,7 +29,7 @@ function getCourses(req, res) {
 }
 
 async function listOfStatusUserByCourse(req, res) {
-    console.log('ok');
+    //console.log('ok');
     try {
         let courses = await core_enrol_get_enrolled_users(req.body.id);
         let usersIdArray = [];
@@ -40,10 +41,11 @@ async function listOfStatusUserByCourse(req, res) {
                 for (let i = 0; i < data.length; i++) {
                     courses[i].statuses = data[i].statuses;
                 }
-                console.log(courses);
+                //console.log(courses);
                 res.status(200).send({ status: true, data: courses });
             }).catch(err => {
-                console.log(err)
+                //console.log(err)
+                res.status(500).send({ status: false, error: err });
             });
         } else {
             res.status(404).send({ status: false, message: 'The course has no enrolled users' })

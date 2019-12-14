@@ -37,12 +37,22 @@ async function listOfStatusUserByCourse(req, res) {
             for (let i = 0; i < courses.length; i++) {
                 usersIdArray.push(core_completion_get_activities_completion_status(req.body.id, courses[i].id));
             }
+            let activitiesIsArray = [];
             Promise.all(usersIdArray).then(data => {
                 for (let i = 0; i < data.length; i++) {
+                    activitiesIsArray.push(get_mission_score_reward(data[i].status.cmid, 10));
                     courses[i].statuses = data[i].statuses;
                 }
-                //console.log(courses);
-                res.status(200).send({ status: true, data: courses });
+                Promise.all(activitiesIsArray).then(data2 => {
+                    for (let i = 0; i < courses.length; i++) {
+                        for (let j = 0; j < courses[i].statutes.length; j++) {
+                            courses[i].status[j].reward = data2[j].reward;
+                        }
+                    }
+                    res.status(200).send({ status: true, data: courses });
+                }).catch(err2 => {
+                    res.status(500).send({ status: false, error: err2 });
+                });
             }).catch(err => {
                 //console.log(err)
                 res.status(500).send({ status: false, error: err });
@@ -83,6 +93,25 @@ function core_enrol_get_enrolled_users(id) {
                 res(body);
             } else {
                 rej(error);
+            }
+        });
+    });
+}
+
+function get_mission_score_reward(mission, score){
+    return new Promise((res, rej) => {
+        request.get({
+            headers: { 'content-type': 'application/json' },
+            url: 'http://172.18.0.22:3001/evocoin/get_mission_score_reward',
+            json: {
+                mission_id: mission,
+                score: score
+            }   
+        }, (error, response, body) => {
+            if (!error && response.statusCode == 200) {
+                res(body);
+            } else {
+                rej(body);
             }
         });
     });

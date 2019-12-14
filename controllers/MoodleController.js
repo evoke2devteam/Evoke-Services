@@ -46,7 +46,7 @@ async function listOfStatusUserByCourse(req, res) {
                 //console.log(courses);
                 res.status(200).send({ status: true, data: courses });
             }).catch(err => {
-                //console.log(err)
+                console.log(err)
                 res.status(500).send({ status: false, error: err });
             });
         } else {

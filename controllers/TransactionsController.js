@@ -118,7 +118,7 @@ function transferEvocoinAPI(addressfrom, privatekey, addressto, amount) {
     });
 }
 
-async function getMissionScore(req, res) {
+function getMissionScore(req, res) {
     core_completion_get_activities_completion_status(8, 6).then(data => {
         let arrayId1 = [];
         let arrayId2 = [];
@@ -128,15 +128,27 @@ async function getMissionScore(req, res) {
             arrayId2.push(get_mission_score_reward(data.statuses[i].cmid, 2));
             arrayId3.push(get_mission_score_reward(data.statuses[i].cmid, 3));
         }
-        const array1 = await Promise.all(arrayId1);
-        const array2 = await Promise.all(arrayId2);
-        const array3 = await Promise.all(arrayId3);
-        for (let i = 0; i < data.status.length; i++) {
-            data.status[i].reward_1 = array1[i].Reward;
-            data.status[i].reward_2 = array2[i].Reward;
-            data.status[i].reward_3 = array3[i].Reward;
-        }
-        res.status(200).send({ status: true, data })
+        Promise.all(arrayId1).then(array1 => {
+            Promise.all(arrayId2).then(array2 => {
+                Promise.all(arrayId3).then(array3 => {
+                    for (let i = 0; i < data.status.length; i++) {
+                        data.status[i].reward_1 = array1[i].Reward;
+                        data.status[i].reward_2 = array2[i].Reward;
+                        data.status[i].reward_3 = array3[i].Reward;
+                    }
+                    res.status(200).send({ status: true, data });
+                }).catch(err3 => {
+                    console.log(err3);
+                    res.status(500).send({ status: false, err3 });
+                });
+            }).catch(err2 => {
+                console.log(err2);
+                res.status(500).send({ status: false, err2 });
+            });
+        }).catch(err1 => {
+            console.log(err1);
+            res.status(500).send({ status: false, err1 });
+        });
     }).catch(err => {
         console.log(err);
         res.status(500).send({ status: false, err });

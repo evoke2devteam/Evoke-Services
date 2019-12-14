@@ -40,7 +40,9 @@ async function listOfStatusUserByCourse(req, res) {
             let activitiesIsArray = [];
             Promise.all(usersIdArray).then(data => {
                 for (let i = 0; i < data.length; i++) {
-                    activitiesIsArray.push(get_mission_score_reward(data[i].statutes.cmid, 10));
+                    for (let j = 0; j < data[i].statutes.length; j++) {
+                        activitiesIsArray.push(get_mission_score_reward(data[i].statutes[j].cmid, 10));
+                    }
                     courses[i].statuses = data[i].statuses;
                 }
                 Promise.all(activitiesIsArray).then(data2 => {

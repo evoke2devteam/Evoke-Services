@@ -274,7 +274,7 @@ function pay_mission_score_user(mission, score, user){
     return new Promise((res, rej) => {
         request.post({
             headers: { 'content-type': 'application/json' },
-            url: 'http://172.18.0.22:3001/evocoin/set_mission_score_reward',
+            url: 'http://172.18.0.22:3001/evocoin/pay_mission_score_user',
             json: {
                 addressfrom: '0xe401862558e44fa2547b66a6c1d50c8492718997',
                 privatekey: '57a29559e91df761c933986caf25debac5e21f4056d4487150cdcaab5cd37096',

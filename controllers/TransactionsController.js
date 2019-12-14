@@ -131,10 +131,10 @@ function getMissionScore(req, res) {
         Promise.all(arrayId1).then(array1 => {
             Promise.all(arrayId2).then(array2 => {
                 Promise.all(arrayId3).then(array3 => {
-                    for (let i = 0; i < data.status.length; i++) {
-                        data.status[i].reward_1 = array1[i].Reward;
-                        data.status[i].reward_2 = array2[i].Reward;
-                        data.status[i].reward_3 = array3[i].Reward;
+                    for (let i = 0; i < data.statuses.length; i++) {
+                        data.statuses[i].reward_1 = array1[i].Reward;
+                        data.statuses[i].reward_2 = array2[i].Reward;
+                        data.statuses[i].reward_3 = array3[i].Reward;
                     }
                     res.status(200).send({ status: true, data });
                 }).catch(err3 => {

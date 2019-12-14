@@ -6,10 +6,7 @@ const google = require('../middleware/AuthGooogle');
 
 api.post('/login', google.authGoogle, celebrate({
     body: Joi.object().keys({
-        id_gg: Joi.string().required(),
-        firstName: Joi.string().required(),
-        lastName: Joi.string().required(),
-        email: Joi.string().email().required()
+        id_moodle: Joi.string().required(),
     }).unknown()
 }), (err, req, res, next) => {
     if (err.joi.details[0].path[0] == 'email') {

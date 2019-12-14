@@ -3,7 +3,7 @@ const Auth = require('../middleware/Auth');
 const request = require('request');
 
 function login(req, res) {
-    UserModel.findOne({ id_gg: req.body.id_gg }, (err, data) => {
+    UserModel.findOne({ id_moodle: req.body.id_moodle }, (err, data) => {
         if (err) {
             res.status(500).send({ status: false, message: 'Faild to find user' });
         } else if (data) {
@@ -26,16 +26,9 @@ function login(req, res) {
                 }
                 keyVault.call().then((result2) => {
                     if (result2.status) {
-                        const createUserMoodle = async () => {
-                            return await createUserMoodleAPI(req.body.email, req.body.firstName, req.body.lastName, result.privateKey);
-                        }
-                        createUserMoodle.call().then(dataMoodle => {
                             UserModel.create({
-                                id_gg: req.body.id_gg,
                                 id_bc: result.address,
-                                id_moodle: dataMoodle[0].id,
-                                firstName: req.body.firstName,
-                                email: req.body.email
+                                id_moodle: req.body.id_moodle
                             }, (err2, data2) => {
                                 if (err2) {
                                     res.status(500).send({ status: false, message: 'Faild to create a user' });
@@ -50,9 +43,6 @@ function login(req, res) {
                                     });
                                 }
                             });
-                        }).catch(err => {
-                            res.status(500).send({ status: false, message: 'Fail to create a Moodle user', error: err })
-                        });
                     } else {
                         res.status(500).send({ status: false, message: result2.message });
                     }
@@ -103,21 +93,6 @@ function keyVaultAPI(address, secret) {
     })
 }
 
-function createUserMoodleAPI(email, firstName, lastName, password) {
-    return new Promise((res, rej) => {
-        request.post({
-            headers: { 'content-type': 'application/json' },
-            url: `https://evoke.moodlecloud.com/webservice/rest/server.php?wstoken=db948bcd784b9b857dc527007526e0e6&moodlewsrestformat=json&wsfunction=core_user_create_users&users[0][username]=${email}&users[0][email]=${email}&users[0][lastname]=${lastName}&users[0][firstname]=${firstName}&users[0][password]=${password}`,
-            json: true
-        }, (error, response, body) => {
-            if (!error && response.statusCode == 200) {
-                res(body);
-            } else {
-                rej(error);
-            }   
-        });
-    });
-}
 
 module.exports = {
     login

@@ -27,7 +27,6 @@ api.post('/balance-of', auth.isAuth, celebrate({
 api.post('/get-mission-score', auth.isAuth, celebrate({
     body: Joi.object().keys({
         mission_id: Joi.number().integer().required(),
-        score: Joi.number().integer().required()
     }).unknown()
 }), (err, req, res, next) => {
     res.status(400).send({ status: false, message: 'Missing data to send' });

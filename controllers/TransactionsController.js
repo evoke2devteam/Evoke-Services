@@ -27,7 +27,7 @@ function approveTransaction(req, res) {
                             }).catch((err2) => {
                                 res.status(500).send({ status: false, message: 'Fail in Evocoin transaction', error: err2 });
                             });
-                        } else if(req.body.type == 'Ruby'){
+                        } else if (req.body.type == 'Ruby') {
                             const BCTransferRuby = async () => {
                                 return await transferRubyAPI(addressfrom, privatekey, addressto, req.body.amount);
                             }
@@ -66,9 +66,9 @@ function balanceOf(req, res) {
             //}
             BCBalanceOf.call().then((resultEvocoin) => {
                 //BCBalanceOfRuby.call().then((resultRuby) => {
-                    res.status(200).send({ status: true, message: 'Successful balance', evocoin: resultEvocoin.evocoin });
+                res.status(200).send({ status: true, message: 'Successful balance', evocoin: resultEvocoin.evocoin });
                 //}).catch((err3) => {
-                    //res.status(500).send({ status: false, message: 'Fail to balance of Rubies', error: err3 });
+                //res.status(500).send({ status: false, message: 'Fail to balance of Rubies', error: err3 });
                 //});
             }).catch((err2) => {
                 res.status(500).send({ status: false, message: 'Fail to balance of Evocoin', error: err2 });
@@ -118,23 +118,40 @@ function transferEvocoinAPI(addressfrom, privatekey, addressto, amount) {
     });
 }
 
-function getMissionScore(req,res){
-    get_mission_score_reward(req.body.mission_id, req.body.score).then( data => {
+async function getMissionScore(req, res) {
+    core_completion_get_activities_completion_status(8, 6).then(data => {
+        let arrayId1 = [];
+        let arrayId2 = [];
+        let arrayId3 = [];
+        for (let i = 0; i < data.statuses.length; i++) {
+            arrayId1.push(get_mission_score_reward(data.statuses[i].cmid, 1));
+            arrayId2.push(get_mission_score_reward(data.statuses[i].cmid, 2));
+            arrayId3.push(get_mission_score_reward(data.statuses[i].cmid, 3));
+        }
+        const array1 = await Promise.all(arrayId1);
+        const array2 = await Promise.all(arrayId2);
+        const array3 = await Promise.all(arrayId3);
+        for (let i = 0; i < data.status.length; i++) {
+            data.status[i].reward_1 = array1[i].Reward;
+            data.status[i].reward_2 = array2[i].Reward;
+            data.status[i].reward_3 = array3[i].Reward;
+        }
+        res.status(200).send({ status: true, data })
+    }).catch(err => {
+        console.log(err);
+        res.status(500).send({ status: false, err });
+    });
+}
+
+function getMissionPaid(req, res) {
+    get_mission_user_paid(req.body.mission_id, req.body.user).then(data => {
         res.status(200).send({ status: true, data });
     }).catch(err => {
         res.status(500).send({ status: false, error: err });
     });
 }
 
-function getMissionPaid(req,res){
-    get_mission_user_paid(req.body.mission_id, req.body.user).then( data => {
-        res.status(200).send({ status: true, data });
-    }).catch(err => {
-        res.status(500).send({ status: false, error: err });
-    });
-}
-
-async function setMissionScore(req,res){
+async function setMissionScore(req, res) {
     set_mission_score_reward(req.body.mission_id, req.body.score, req.body.reward).then(data => {
         res.status(200).send({ status: true, message: data });
     }).catch(err => {
@@ -142,7 +159,7 @@ async function setMissionScore(req,res){
     });
 }
 
-function payMissionScore(req,res){
+function payMissionScore(req, res) {
     pay_mission_score_user(req.body.mission_id, req.body.score, req.body.user).then(data => {
         res.status(200).send({ status: true, message: data });
     }).catch(err => {
@@ -209,7 +226,7 @@ function balanceOfAPI(address) {
     });
 }
 
-function get_mission_score_reward(mission, score){
+function get_mission_score_reward(mission, score) {
     return new Promise((res, rej) => {
         request.get({
             headers: { 'content-type': 'application/json' },
@@ -217,7 +234,7 @@ function get_mission_score_reward(mission, score){
             json: {
                 mission_id: mission,
                 score: score
-            }   
+            }
         }, (error, response, body) => {
             if (!error && response.statusCode == 200) {
                 res(body);
@@ -228,7 +245,7 @@ function get_mission_score_reward(mission, score){
     });
 }
 
-function get_mission_user_paid(mission, user){
+function get_mission_user_paid(mission, user) {
     return new Promise((res, rej) => {
         request.get({
             headers: { 'content-type': 'application/json' },
@@ -236,8 +253,8 @@ function get_mission_user_paid(mission, user){
             json: {
                 mission_id: mission,
                 user: user
-            }  
-        },  (error, response, body) => {
+            }
+        }, (error, response, body) => {
             if (!error && response.statusCode == 200) {
                 res(body);
             } else {
@@ -247,7 +264,7 @@ function get_mission_user_paid(mission, user){
     })
 }
 
-function set_mission_score_reward(mission, score, reward){
+function set_mission_score_reward(mission, score, reward) {
     return new Promise((res, rej) => {
         request.post({
             headers: { 'content-type': 'application/json' },
@@ -270,7 +287,7 @@ function set_mission_score_reward(mission, score, reward){
 }
 
 //user: '0xd7B61E052bacbb0CE0b9F8E932C2362574cFEf7C'
-function pay_mission_score_user(mission, score, user){
+function pay_mission_score_user(mission, score, user) {
     return new Promise((res, rej) => {
         request.post({
             headers: { 'content-type': 'application/json' },
@@ -287,6 +304,22 @@ function pay_mission_score_user(mission, score, user){
                 res(body);
             } else {
                 rej(body);
+            }
+        });
+    });
+}
+
+function core_completion_get_activities_completion_status(idCurso, idUser) {
+    return new Promise((res, rej) => {
+        request.post({
+            headers: { 'content-type': 'application/json' },
+            url: `https://evoke-colombia.moodle.school/webservice/rest/server.php?wstoken=32764463f86f0ea1cfd1cdf4bb00ac7f&moodlewsrestformat=json&wsfunction=core_completion_get_activities_completion_status&courseid=${idCurso}&userid=${idUser}`,
+            json: true
+        }, (error, response, body) => {
+            if (!error) {
+                res(body);
+            } else {
+                rej(error);
             }
         });
     });

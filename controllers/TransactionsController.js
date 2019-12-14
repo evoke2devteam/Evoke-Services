@@ -120,14 +120,18 @@ function transferEvocoinAPI(addressfrom, privatekey, addressto, amount) {
 
 function getMissionScore(req,res){
     get_mission_score_reward(req.body.mission_id, req.body.score).then( data => {
-        res.status(200).send({ status: true, message: data });
+        res.status(200).send({ status: true, data });
     }).catch(err => {
         res.status(500).send({ status: false, error: err });
     });
 }
 
 function getMissionPaid(req,res){
-    res.status(200).send({ status: true, message: 'API Works' });
+    get_mission_user_paid(req.body.mission_id, req.body.user).then( data => {
+        res.status(200).send({ status: true, data });
+    }).catch(err => {
+        res.status(500).send({ status: false, error: err });
+    });
 }
 
 async function setMissionScore(req,res){
@@ -139,7 +143,11 @@ async function setMissionScore(req,res){
 }
 
 function payMissionScore(req,res){
-    res.status(200).send({ status: true, message: 'API Works' });
+    pay_mission_score_user(req.body.mission_id, req.body.score, req.body.user).then(data => {
+        res.status(200).send({ status: true, message: data });
+    }).catch(err => {
+        res.status(500).send({ status: false, error: err });
+    });
 }
 
 /**

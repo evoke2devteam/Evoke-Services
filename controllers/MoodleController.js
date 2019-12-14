@@ -40,24 +40,13 @@ async function listOfStatusUserByCourse(req, res) {
             let activitiesIsArray = [];
             Promise.all(usersIdArray).then(data => {
                 for (let i = 0; i < data.length; i++) {
-                    for (let j = 0; j < data[i].statutes.length; j++) {
-                        activitiesIsArray.push(get_mission_score_reward(data[i].statutes[j].cmid, 10));
-                    }
+                    activitiesIsArray.push(get_mission_score_reward(data[i].status.cmid, 10));
                     courses[i].statuses = data[i].statuses;
                 }
-                Promise.all(activitiesIsArray).then(data2 => {
-                    for (let i = 0; i < courses.length; i++) {
-                        for (let j = 0; j < courses[i].statutes.length; j++) {
-                            courses[i].status[j].reward = data2[j].reward;
-                        }
-                    }
-                    res.status(200).send({ status: true, data: courses });
-                }).catch(err2 => {
-                    res.status(500).send({ status: false, error: err2 });
-                    console.log(err2)
-                });
+                //console.log(courses);
+                res.status(200).send({ status: true, data: courses });
             }).catch(err => {
-                console.log(err)
+                //console.log(err)
                 res.status(500).send({ status: false, error: err });
             });
         } else {

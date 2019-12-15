@@ -172,9 +172,16 @@ async function setMissionScore(req, res) {
 }
 
 function payMissionScore(req, res) {
-    pay_mission_score_user(req.body.mission_id, req.body.score, req.body.user).then(data => {
-        res.status(200).send({ status: true, message: data });
+    login(req.body.user).then(data => { 
+        const id_bc = data.data.id_bc;
+        pay_mission_score_user(req.body.mission_id, req.body.score, id_bc).then(data => {
+            res.status(200).send({ status: true, message: data });
+        }).catch(err2 => {
+            console.log(err2);
+            res.status(500).send({ status: false, error: err2 });
+        });
     }).catch(err => {
+        console.log(err);
         res.status(500).send({ status: false, error: err });
     });
 }
@@ -330,6 +337,24 @@ function core_completion_get_activities_completion_status(idCurso, idUser) {
         }, (error, response, body) => {
             if (!error) {
                 res(body);
+            } else {
+                rej(error);
+            }
+        });
+    });
+}
+
+function login(id_moodle) {
+    return new Promise((res, rej) => {
+        request.post({
+            headers: { 'content-type': 'application/json' },
+            url: 'http://40.117.251.59/account/login',
+            json: {
+                id_moodle
+            }
+        }, (error, response, body) => {
+            if (!error) {
+                res(body && response.statusCode == 200);
             } else {
                 rej(error);
             }

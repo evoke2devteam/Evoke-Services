@@ -182,7 +182,7 @@ function payMissionScore(req, res) {
         });
     }).catch(err => {
         console.log(err);
-        res.status(500).send({ status: false, error: err });
+        res.status(500).send({ status: false, error: 'Fallo al validar usuario' });
     });
 }
 

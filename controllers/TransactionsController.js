@@ -354,8 +354,8 @@ function login(id_moodle) {
                 id_moodle
             }
         }, (error, response, body) => {
-            if (!error) {
-                res(body && response.statusCode == 200);
+            if (!error && response.statusCode == 200) {
+                res(body);
             } else {
                 rej(error);
             }

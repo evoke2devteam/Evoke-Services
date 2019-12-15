@@ -32,11 +32,11 @@ api.post('/get-mission-score', auth.isAuth, celebrate({
     res.status(400).send({ status: false, message: 'Missing data to send' });
 }, TransactionController.getMissionScore);
 
-api.post('/get-mission-paid', auth.isAuth,celebrate({
+api.post('/get-mission-paid', auth.isAuth, celebrate({
     body: Joi.object().keys({
         mission_id: Joi.number().integer().required(),
         score: Joi.number().integer().required(),
-        user: Joi.string().required()
+        user: Joi.number().integer().required()
     }).unknown()
 }), (err, req, res, next) => {
     res.status(400).send({ status: false, message: 'Missing data to send' });

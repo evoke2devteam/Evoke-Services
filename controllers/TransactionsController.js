@@ -351,16 +351,13 @@ function login(id_moodle) {
             headers: { 'content-type': 'application/json' },
             url: 'http://40.117.251.59/account/login',
             json: {
-                id_moodle
+                id_moodle: id_moodle
             }
         }, (error, response, body) => {
-            console.log(response);
-            console.log(body);
-            console.log(error);
             if (!error && response.statusCode == 200) {
                 res(body);
             } else {
-                rej(error);
+                rej(body);
             }
         });
     });

@@ -173,6 +173,7 @@ async function setMissionScore(req, res) {
 
 function payMissionScore(req, res) {
     login(req.body.user).then(data => { 
+        console.log(data);
         const id_bc = data.data.id_bc;
         pay_mission_score_user(req.body.mission_id, req.body.score, id_bc).then(data => {
             res.status(200).send({ status: true, message: data });

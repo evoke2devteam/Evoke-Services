@@ -156,12 +156,21 @@ function getMissionScore(req, res) {
 }
 
 async function getMissionPaid(req, res) {
-    const id_bc = await userModel.findOne({ id_moodle: req.body.user });
-    get_mission_user_paid(req.body.mission_id, id_bc.id_bc).then(data => {
-        res.status(200).send({ status: true, data });
-    }).catch(err => {
-        res.status(500).send({ status: false, error: err });
-    });
+    try {
+        const id_bc = await userModel.findOne({ id_moodle: req.body.user });
+        console.log(id_bc);
+        
+        if (id_bc) {
+            
+        }
+        get_mission_user_paid(req.body.mission_id, req.body.user).then(data => {
+            res.status(200).send({ status: true, data });
+        }).catch(err => {
+            res.status(500).send({ status: false, error: err });
+        });
+    } catch (e) {
+        res.status(500).send({ status: false, message: 'Fail to consult user' })
+    }
 }
 
 async function setMissionScore(req, res) {
@@ -173,7 +182,7 @@ async function setMissionScore(req, res) {
 }
 
 function payMissionScore(req, res) {
-    login(req.body.user).then(data => { 
+    login(req.body.user).then(data => {
         console.log(data);
         const id_bc = data.data.id_bc;
         pay_mission_score_user(req.body.mission_id, req.body.score, id_bc).then(data => {

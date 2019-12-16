@@ -168,7 +168,7 @@ function getMissionPain(mission, user) {
                 res(body);
             } else if (!error && response.statusCode == 404) {
                 //console.log(0);
-                res({ data: { Paid: 0 } });
+                res(body);
             } else {
                 rej(body);
             }

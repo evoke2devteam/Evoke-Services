@@ -155,8 +155,9 @@ function getMissionScore(req, res) {
     });
 }
 
-function getMissionPaid(req, res) {
-    get_mission_user_paid(req.body.mission_id, req.body.user).then(data => {
+async function getMissionPaid(req, res) {
+    const id_bc = await userModel.findOne({ id_moodle: req.body.user });
+    get_mission_user_paid(req.body.mission_id, id_bc.id_bc).then(data => {
         res.status(200).send({ status: true, data });
     }).catch(err => {
         res.status(500).send({ status: false, error: err });

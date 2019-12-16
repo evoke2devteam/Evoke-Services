@@ -50,22 +50,28 @@ async function listOfStatusUserByCourse(req, res) {
                     //console.log(data[0].statuses[i].cmid);
                     activitiesIsArray.push(get_mission_score_reward(data[0].statuses[i].cmid, 1));
                 }
-                //Promise.all(userPaidArray).then(paid => { console.log(paid) }).catch(errPaid => { console.log(errPaid) });
-                Promise.all(activitiesIsArray).then(data2 => {
-                    for (let i = 0; i < data.length; i++) {
-                        courses[i].statuses = data[i].statuses;
-                    }
-                    for (let i = 0; i < courses.length; i++) {
-                        for (let j = 0; j < courses[i].statuses.length; j++) {
-                            //const element = array[j];
-                            courses[i].statuses[j].reward = data2[j].Reward
+                Promise.all(userPaidArray).then(paid => { 
+                    //console.log(paid);
+                    Promise.all(activitiesIsArray).then(data2 => {
+                        for (let i = 0; i < data.length; i++) {
+                            courses[i].statuses = data[i].statuses;
                         }
-
-                    }
-                    res.status(200).send({ status: true, data: courses });
-                }).catch(err2 => {
-                    console.log(err2)
-                    res.status(500).send({ status: false, error: err });
+                        for (let i = 0; i < courses.length; i++) {
+                            for (let j = 0; j < courses[i].statuses.length; j++) {
+                                //const element = array[j];
+                                courses[i].statuses[j].reward = data2[j].Reward;
+                                courses[i].statuses[j].paid_status = paid;
+                            }
+    
+                        }
+                        res.status(200).send({ status: true, data: courses });
+                    }).catch(err2 => {
+                        console.log(err2)
+                        res.status(500).send({ status: false, error: err });
+                    });
+                }).catch(errPaid => { 
+                    console.log(errPaid)
+                    res.status(500).send({ status: false, error: errPaid });
                 });
             }).catch(err => {
                 console.log(err)
@@ -158,10 +164,10 @@ function getMissionPain(mission, user) {
             }
         }, (error, response, body) => {
             if (!error && response.statusCode == 200) {
-                console.log(1);
+                //console.log(1);
                 res(body);
             } else if (!error && response.statusCode == 404) {
-                console.log(0);
+                //console.log(0);
                 res({ data: { Paid: 0 } });
             } else {
                 rej(body);

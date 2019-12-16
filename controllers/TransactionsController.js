@@ -161,12 +161,16 @@ async function getMissionPaid(req, res) {
         const id_bc = await userModel.findOne({ id_moodle: req.body.user });
         if (id_bc) {
             get_mission_user_paid(req.body.mission_id, id_bc.id_bc).then(data => {
-                res.status(200).send({ status: true, data });
+                if (data.Paid == 0) {
+                    res.status(200).send({ status: true, data, paid_status: false }); 
+                } else {
+                    res.status(200).send({ status: true, data, paid_status: true }); 
+                }
             }).catch(err => {
                 res.status(500).send({ status: false, error: err });
             });
         } else {
-            res.status(404).send({ status: false, message: 'User not Foud' });
+            res.status(404).send({ status: false, message: 'User not Foud', paid_status: false });
         }
     } catch (e) {
         res.status(500).send({ status: false, message: 'Fail to consult user' })

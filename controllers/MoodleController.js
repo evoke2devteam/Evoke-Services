@@ -41,8 +41,8 @@ async function listOfStatusUserByCourse(req, res) {
             let activitiesIsArray = [];
             Promise.all(usersIdArray).then(data => {
                 for (let i = 0; i < courses.length; i++) {
-                    for (let j = 0; j < data[0].statutes.length; j++) {
-                        userPaidArray.push(getMissionPain(courses[i].id, data[0].statutes[j].cmid));
+                    for (let j = 0; j < data[0].statuses.length; j++) {
+                        userPaidArray.push(getMissionPain(courses[i].id, data[0].statuses[j].cmid));
                     }
                 }
                 for (let i = 0; i < data[0].statuses.length; i++) {

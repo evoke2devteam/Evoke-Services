@@ -50,7 +50,7 @@ async function listOfStatusUserByCourse(req, res) {
                     //console.log(data[0].statuses[i].cmid);
                     activitiesIsArray.push(get_mission_score_reward(data[0].statuses[i].cmid, 1));
                 }
-                Promise.all(userPaidArray).then(paid => { console.log(paid) }).catch(errPaid => { console.log(errPaid) });
+                //Promise.all(userPaidArray).then(paid => { console.log(paid) }).catch(errPaid => { console.log(errPaid) });
                 Promise.all(activitiesIsArray).then(data2 => {
                     for (let i = 0; i < data.length; i++) {
                         courses[i].statuses = data[i].statuses;

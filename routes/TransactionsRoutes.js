@@ -35,7 +35,6 @@ api.post('/get-mission-score', auth.isAuth, celebrate({
 api.post('/get-mission-paid', auth.isAuth, celebrate({
     body: Joi.object().keys({
         mission_id: Joi.number().integer().required(),
-        score: Joi.number().integer().required(),
         user: Joi.number().integer().required()
     }).unknown()
 }), (err, req, res, next) => {

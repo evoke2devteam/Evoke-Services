@@ -155,7 +155,7 @@ function getChoices(id) {
 
 function getMissionPain(mission, user) {
     return new Promise((res, rej) => {
-        request.get({
+        request.post({
             headers: { 'content-type': 'application/json' },
             url: 'https://www.evokecolombia.com/mission/get-paid',
             json: {

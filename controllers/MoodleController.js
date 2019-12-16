@@ -37,30 +37,35 @@ async function listOfStatusUserByCourse(req, res) {
         if (courses.length > 0) {
             for (let i = 0; i < courses.length; i++) {
                 usersIdArray.push(core_completion_get_activities_completion_status(req.body.id, courses[i].id));
-                }
+            }
             let activitiesIsArray = [];
-            const arrayPaid = Promise.all(userPaidArray);
             Promise.all(usersIdArray).then(data => {
-                for (let i = 0; i < data[0].statuses.length; i++) {                    
+                for (let i = 0; i < courses.length; i++) {
+                    for (let j = 0; j < data[0].statutes.length; j++) {
+                        userPaidArray.push(getMissionPain(courses[i].id, data[0].statutes[j].cmid));
+                    }
+                }
+                for (let i = 0; i < data[0].statuses.length; i++) {
                     //console.log(data[0].statuses[i].cmid);
                     activitiesIsArray.push(get_mission_score_reward(data[0].statuses[i].cmid, 1));
                 }
+                Promise.all(userPaidArray).then(paid => { console.log(paid) }).catch(errPaid => { console.log(errPaid) });
                 Promise.all(activitiesIsArray).then(data2 => {
                     for (let i = 0; i < data.length; i++) {
                         courses[i].statuses = data[i].statuses;
-                    } 
+                    }
                     for (let i = 0; i < courses.length; i++) {
                         for (let j = 0; j < courses[i].statuses.length; j++) {
                             //const element = array[j];
                             courses[i].statuses[j].reward = data2[j].Reward
                         }
-                        
+
                     }
                     res.status(200).send({ status: true, data: courses });
                 }).catch(err2 => {
                     console.log(err2)
                     res.status(500).send({ status: false, error: err });
-                }); 
+                });
             }).catch(err => {
                 console.log(err)
                 res.status(500).send({ status: false, error: err });
@@ -106,7 +111,7 @@ function core_enrol_get_enrolled_users(id) {
     });
 }
 
-function get_mission_score_reward(mission, score){
+function get_mission_score_reward(mission, score) {
     return new Promise((res, rej) => {
         request.get({
             headers: { 'content-type': 'application/json' },
@@ -114,7 +119,7 @@ function get_mission_score_reward(mission, score){
             json: {
                 mission_id: mission,
                 score: score
-            }   
+            }
         }, (error, response, body) => {
             if (!error && response.statusCode == 200) {
                 res(body);
@@ -141,7 +146,7 @@ function getChoices(id) {
     });
 }
 
-function getMissionPain(mission, user){
+function getMissionPain(mission, user) {
     return new Promise((res, rej) => {
         request.get({
             headers: { 'content-type': 'application/json' },
@@ -149,11 +154,11 @@ function getMissionPain(mission, user){
             json: {
                 mission_id: mission,
                 user: user
-            }   
+            }
         }, (error, response, body) => {
             if (!error && response.statusCode == 200) {
                 res(body);
-            } else if(!error && response.statusCode == 404 ) {
+            } else if (!error && response.statusCode == 404) {
                 res({ data: { Paid: 0 } });
             } else {
                 rej(body);

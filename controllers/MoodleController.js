@@ -156,14 +156,16 @@ function getChoices(id) {
 function getMissionPain(mission, user) {
     return new Promise((res, rej) => {
         request.post({
-            headers: { 'content-type': 'application/json' },
+            headers: { 'content-type': 'application/json',
+            'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0IiwiaWF0IjoxNTcyMzg2OTc0LCJzZWNyZXQiOiIxMSszRXYxdjBvM2tLa2VfNCJ9.jkTrhT-KoTjU9iITyPJlxBLovfBDEPVDLgJU5PhF2HY' 
+        },
             url: 'https://www.evokecolombia.com/mission/get-paid',
             json: {
                 mission_id: mission,
                 user: user
             }
         }, (error, response, body) => {
-            console.log(body);
+            //console.log(body);
             if (!error && response.statusCode == 200) {
                 //console.log(1);
                 res(body);

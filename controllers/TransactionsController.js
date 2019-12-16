@@ -173,13 +173,11 @@ async function getMissionPaid(req, res) {
 }
 
 async function setMissionScore(req, res) {
-    Promise.all(set_mission_score_reward(req.body.mission_id, req.body.score_1, req.body.reward_1),
+    Promise.all([set_mission_score_reward(req.body.mission_id, req.body.score_1, req.body.reward_1),
         set_mission_score_reward(req.body.mission_id, req.body.score_2, req.body.reward_2),
-        set_mission_score_reward(req.body.mission_id, req.body.score_3, req.body.reward_3)).then(data => {
+        set_mission_score_reward(req.body.mission_id, req.body.score_3, req.body.reward_3)]).then(data => {
             res.status(200).send({ status: true, data })
         }).catch(err => {
-            console.log(err);
-            
             res.status(500).send({ status: false, message: 'Fail to set reward' });
         });
 }

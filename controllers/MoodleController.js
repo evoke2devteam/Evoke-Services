@@ -60,7 +60,7 @@ async function listOfStatusUserByCourse(req, res) {
                             for (let j = 0; j < courses[i].statuses.length; j++) {
                                 //const element = array[j];
                                 courses[i].statuses[j].reward = data2[j].Reward;
-                                courses[i].statuses[j].paid_status = paid;
+                                courses[i].statuses[j].paid_status = paid[j];
                             }
     
                         }

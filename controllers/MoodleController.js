@@ -42,6 +42,7 @@ async function listOfStatusUserByCourse(req, res) {
             Promise.all(usersIdArray).then(data => {
                 for (let i = 0; i < courses.length; i++) {
                     for (let j = 0; j < data[0].statuses.length; j++) {
+                        console.log('User: ' + courses[i].id + ' /n Activity: ' + data[0].statuses[j].cmid); 
                         userPaidArray.push(getMissionPain(courses[i].id, data[0].statuses[j].cmid));
                     }
                 }

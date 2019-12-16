@@ -44,8 +44,12 @@ api.post('/get-mission-paid', auth.isAuth, celebrate({
 api.post('/set-mission-score', auth.isAuth, celebrate({
     body: Joi.object().keys({
         mission_id: Joi.number().integer().required(),
-        score: Joi.number().integer().required(),
-        reward: Joi.number().integer().required()
+        score_1: Joi.number().integer().required(),
+        reward_1: Joi.number().integer().required(),
+        score_2: Joi.number().integer().required(),
+        reward_2: Joi.number().integer().required(),
+        score_3: Joi.number().integer().required(),
+        reward_3: Joi.number().integer().required()
     }).unknown()
 }), (err, req, res, next) => {
     res.status(400).send({ status: false, message: 'Missing data to send' });

@@ -33,11 +33,13 @@ async function listOfStatusUserByCourse(req, res) {
     try {
         let courses = await core_enrol_get_enrolled_users(req.body.id);
         let usersIdArray = [];
+        let userPaidArray = [];
         if (courses.length > 0) {
             for (let i = 0; i < courses.length; i++) {
                 usersIdArray.push(core_completion_get_activities_completion_status(req.body.id, courses[i].id));
-            }
+                }
             let activitiesIsArray = [];
+            const arrayPaid = Promise.all(userPaidArray);
             Promise.all(usersIdArray).then(data => {
                 for (let i = 0; i < data[0].statuses.length; i++) {                    
                     //console.log(data[0].statuses[i].cmid);
@@ -134,6 +136,27 @@ function getChoices(id) {
                 res(body);
             } else {
                 rej(error);
+            }
+        });
+    });
+}
+
+function getMissionPain(mission, user){
+    return new Promise((res, rej) => {
+        request.get({
+            headers: { 'content-type': 'application/json' },
+            url: 'https://www.evokecolombia.com/mission/get-paid',
+            json: {
+                mission_id: mission,
+                user: user
+            }   
+        }, (error, response, body) => {
+            if (!error && response.statusCode == 200) {
+                res(body);
+            } else if(!error && response.statusCode == 404 ) {
+                res({ data: { Paid: 0 } });
+            } else {
+                rej(body);
             }
         });
     });

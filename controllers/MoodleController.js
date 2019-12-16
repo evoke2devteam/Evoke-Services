@@ -43,7 +43,7 @@ async function listOfStatusUserByCourse(req, res) {
                 for (let i = 0; i < courses.length; i++) {
                     for (let j = 0; j < data[0].statuses.length; j++) {
                         //console.log('User: ' + courses[i].id + ' /n Activity: ' + data[0].statuses[j].cmid); 
-                        userPaidArray.push(getMissionPain(courses[i].id, data[0].statuses[j].cmid));
+                        userPaidArray.push(getMissionPaid(data[0].statuses[j].cmid, courses[i].id));
                     }
                 }
                 for (let i = 0; i < data[0].statuses.length; i++) {
@@ -56,11 +56,13 @@ async function listOfStatusUserByCourse(req, res) {
                         for (let i = 0; i < data.length; i++) {
                             courses[i].statuses = data[i].statuses;
                         }
+                        let iter = 0
                         for (let i = 0; i < courses.length; i++) {
                             for (let j = 0; j < courses[i].statuses.length; j++) {
                                 //const element = array[j];
                                 courses[i].statuses[j].reward = data2[j].Reward;
-                                courses[i].statuses[j].paid_status = paid[j];
+                                courses[i].statuses[j].paid_status = paid[iter];
+                                iter ++;
                             }
     
                         }
@@ -153,7 +155,7 @@ function getChoices(id) {
     });
 }
 
-function getMissionPain(mission, user) {
+function getMissionPaid(mission, user) {
     return new Promise((res, rej) => {
         request.post({
             headers: { 'content-type': 'application/json',

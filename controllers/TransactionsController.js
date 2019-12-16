@@ -156,7 +156,7 @@ function getMissionScore(req, res) {
 }
 
 async function getMissionPaid(req, res) {
-    console.log(req.body.user);
+    //console.log(req.body.user);
     try {
         const id_bc = await userModel.findOne({ id_moodle: req.body.user });
         if (id_bc) {

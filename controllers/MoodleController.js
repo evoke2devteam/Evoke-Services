@@ -42,7 +42,7 @@ async function listOfStatusUserByCourse(req, res) {
             Promise.all(usersIdArray).then(data => {
                 for (let i = 0; i < courses.length; i++) {
                     for (let j = 0; j < data[0].statuses.length; j++) {
-                        console.log('User: ' + courses[i].id + ' /n Activity: ' + data[0].statuses[j].cmid); 
+                        //console.log('User: ' + courses[i].id + ' /n Activity: ' + data[0].statuses[j].cmid); 
                         userPaidArray.push(getMissionPain(courses[i].id, data[0].statuses[j].cmid));
                     }
                 }
@@ -50,7 +50,7 @@ async function listOfStatusUserByCourse(req, res) {
                     //console.log(data[0].statuses[i].cmid);
                     activitiesIsArray.push(get_mission_score_reward(data[0].statuses[i].cmid, 1));
                 }
-                //Promise.all(userPaidArray).then(paid => { console.log(paid) }).catch(errPaid => { console.log(errPaid) });
+                Promise.all(userPaidArray).then(paid => { console.log(paid) }).catch(errPaid => { console.log(errPaid) });
                 Promise.all(activitiesIsArray).then(data2 => {
                     for (let i = 0; i < data.length; i++) {
                         courses[i].statuses = data[i].statuses;

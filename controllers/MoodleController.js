@@ -163,6 +163,7 @@ function getMissionPain(mission, user) {
                 user: user
             }
         }, (error, response, body) => {
+            console.log(body);
             if (!error && response.statusCode == 200) {
                 //console.log(1);
                 res(body);

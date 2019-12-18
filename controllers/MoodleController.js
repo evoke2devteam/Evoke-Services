@@ -34,7 +34,6 @@ async function listOfStatusUserByCourse(req, res) {
         let activities = await core_course_get_contents(req.body.id);
         let usersIdArray = [];
         let userPaidArray = [];
-        console.log(activities);
         if (courses.length > 0 && activities.length > 0) {
             let activitiesInfo = [];
             for (let i = 0; i < activities.length; i++) {
@@ -155,7 +154,7 @@ function core_course_get_contents(course_id){
     return new Promise((res, rej) => {
         request.post({
             headers: { 'content-type': 'application/json' },
-            url: `https://evoke-colombia.moodle.school/webservice/rest/server.php?wstoken=32764463f86f0ea1cfd1cdf4bb00ac7f&moodlewsrestformat=json&wsfunction=core_course_get_contents&courseid=    ${course_id}`,
+            url: `https://evoke-colombia.moodle.school/webservice/rest/server.php?wstoken=32764463f86f0ea1cfd1cdf4bb00ac7f&moodlewsrestformat=json&wsfunction=core_course_get_contents&courseid=${course_id}`,
             json: true
         }, (error, response, body) => {
             if (!error) {

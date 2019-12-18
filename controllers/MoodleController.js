@@ -59,7 +59,7 @@ async function listOfStatusUserByCourse(req, res) {
                     //console.log(data[0].statuses[i].cmid);
                     activitiesIsArray.push(get_mission_score_reward(data[0].statuses[i].cmid, 1));
                 }
-                Promise.all(userPaidArray).then(paid => { 
+                Promise.all(userPaidArray).then(paid => {
                     //console.log(paid);
                     Promise.all(activitiesIsArray).then(data2 => {
                         for (let i = 0; i < data.length; i++) {
@@ -68,22 +68,20 @@ async function listOfStatusUserByCourse(req, res) {
                         let iter = 0
                         for (let i = 0; i < courses.length; i++) {
                             for (let j = 0; j < courses[i].statuses.length; j++) {
-                                //const element = array[j];
                                 let name1 = activitiesInfo.map(e => { return e.id; }).indexOf(courses[i].statuses[j].cmid);
-                                //let name1 = activitiesInfo.findIndex(x => x.id === courses[i].statuses[j].cmid);
-                                console.log(activitiesInfo[name1].name);
+                                courses[i].statuses[j].name = activitiesInfo[name1].name;
                                 courses[i].statuses[j].reward = data2[j].Reward;
                                 courses[i].statuses[j].paid_status = paid[iter].paid_status;
-                                iter ++;
+                                iter++;
                             }
-    
+
                         }
                         res.status(200).send({ status: true, data: courses });
                     }).catch(err2 => {
                         console.log(err2)
                         res.status(500).send({ status: false, error: err });
                     });
-                }).catch(errPaid => { 
+                }).catch(errPaid => {
                     console.log(errPaid)
                     res.status(500).send({ status: false, error: errPaid });
                 });
@@ -151,7 +149,7 @@ function get_mission_score_reward(mission, score) {
     });
 }
 
-function core_course_get_contents(course_id){
+function core_course_get_contents(course_id) {
     return new Promise((res, rej) => {
         request.post({
             headers: { 'content-type': 'application/json' },
@@ -186,9 +184,10 @@ function getChoices(id) {
 function getMissionPaid(mission, user) {
     return new Promise((res, rej) => {
         request.post({
-            headers: { 'content-type': 'application/json',
-            'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0IiwiaWF0IjoxNTcyMzg2OTc0LCJzZWNyZXQiOiIxMSszRXYxdjBvM2tLa2VfNCJ9.jkTrhT-KoTjU9iITyPJlxBLovfBDEPVDLgJU5PhF2HY' 
-        },
+            headers: {
+                'content-type': 'application/json',
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0IiwiaWF0IjoxNTcyMzg2OTc0LCJzZWNyZXQiOiIxMSszRXYxdjBvM2tLa2VfNCJ9.jkTrhT-KoTjU9iITyPJlxBLovfBDEPVDLgJU5PhF2HY'
+            },
             url: 'https://www.evokecolombia.com/mission/get-paid',
             json: {
                 mission_id: mission,

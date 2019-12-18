@@ -34,7 +34,7 @@ async function listOfStatusUserByCourse(req, res) {
         //let activities = await core_course_get_contents(req.body.id);
         let usersIdArray = [];
         let userPaidArray = [];
-        if (courses.length > 0 && activities.length > 0) {
+        if (courses.length > 0 /* && activities.length > 0 */) {
             //let activitiesInfo = [];
             //for (let i = 0; i < activities.length; i++) {
             //    for (let j = 0; j < activities[i].modules.length; j++) {

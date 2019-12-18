@@ -29,12 +29,12 @@ function getCourses(req, res) {
 }
 
 async function listOfStatusUserByCourse(req, res) {
-    //console.log('ok');
     try {
         let courses = await core_enrol_get_enrolled_users(req.body.id);
         let activities = await core_course_get_contents(req.body.id);
         let usersIdArray = [];
         let userPaidArray = [];
+        console.log(activities);
         if (courses.length > 0 && activities.length > 0) {
             let activitiesInfo = [];
             for (let i = 0; i < activities.length; i++) {

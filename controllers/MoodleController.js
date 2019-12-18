@@ -69,8 +69,8 @@ async function listOfStatusUserByCourse(req, res) {
                         for (let i = 0; i < courses.length; i++) {
                             for (let j = 0; j < courses[i].statuses.length; j++) {
                                 //const element = array[j];
-                                activitiesInfo.map(e => { return courses[i].statuses[j].name = e.name; }).indexOf(courses[i].statuses[j].cmid);
-                                //console.log(name1);
+                                let name1 = activitiesInfo.map(e => { return e.id; }).indexOf(courses[i].statuses[j].cmid);
+                                console.log(name1);
                                 courses[i].statuses[j].reward = data2[j].Reward;
                                 courses[i].statuses[j].paid_status = paid[iter].paid_status;
                                 iter ++;

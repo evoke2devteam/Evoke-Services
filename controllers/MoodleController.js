@@ -32,9 +32,19 @@ async function listOfStatusUserByCourse(req, res) {
     //console.log('ok');
     try {
         let courses = await core_enrol_get_enrolled_users(req.body.id);
+        let activities = await core_course_get_contents(req.body.id);
         let usersIdArray = [];
         let userPaidArray = [];
-        if (courses.length > 0) {
+        if (courses.length > 0 && activities.length > 0) {
+            let activitiesInfo = [];
+            for (let i = 0; i < activities.length; i++) {
+                for (let j = 0; j < activities[i].modules.length; j++) {
+                    activitiesInfo.push({
+                        id: activities[i].modules[j].id,
+                        name: activities[i].modules[j].name
+                    });
+                }
+            }
             for (let i = 0; i < courses.length; i++) {
                 usersIdArray.push(core_completion_get_activities_completion_status(req.body.id, courses[i].id));
             }
@@ -60,6 +70,8 @@ async function listOfStatusUserByCourse(req, res) {
                         for (let i = 0; i < courses.length; i++) {
                             for (let j = 0; j < courses[i].statuses.length; j++) {
                                 //const element = array[j];
+                                name = activitiesInfo.map(e => { return e.name }).indexOf(courses[i].statuses[j].cmid);
+                                console.log(name);
                                 courses[i].statuses[j].reward = data2[j].Reward;
                                 courses[i].statuses[j].paid_status = paid[iter].paid_status;
                                 iter ++;
@@ -134,6 +146,22 @@ function get_mission_score_reward(mission, score) {
                 res(body);
             } else {
                 rej(body);
+            }
+        });
+    });
+}
+
+function core_course_get_contents(course_id){
+    return new Promise((res, rej) => {
+        request.post({
+            headers: { 'content-type': 'application/json' },
+            url: `https://evoke-colombia.moodle.school/webservice/rest/server.php?wstoken=32764463f86f0ea1cfd1cdf4bb00ac7f&moodlewsrestformat=json&wsfunction=core_course_get_contents&courseid=    ${course_id}`,
+            json: true
+        }, (error, response, body) => {
+            if (!error) {
+                res(body);
+            } else {
+                rej(error);
             }
         });
     });

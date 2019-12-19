@@ -43,6 +43,7 @@ api.post('/get-mission-paid', auth.isAuth, celebrate({
 
 api.post('/set-mission-score', auth.isAuth, celebrate({
     body: Joi.object().keys({
+        admin: Joi.number().integer().required(),
         mission_id: Joi.number().integer().required(),
         score: Joi.number().integer().required(),
         reward: Joi.number().integer().required()

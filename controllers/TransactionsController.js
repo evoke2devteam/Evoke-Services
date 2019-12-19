@@ -178,10 +178,22 @@ async function getMissionPaid(req, res) {
 }
 
 async function setMissionScore(req, res) {
-    set_mission_score_reward(req.body.mission_id, req.body.score, req.body.reward).then(data => {
-        res.status(200).send({ status: true, message: data });
-    }).catch(err => {
-        res.status(500).send({ status: false, error: err });
+    login(req.body.admin).then(data_admin => {
+        const id_bc_admin = data_admin.data.id_bc;
+        findKeyVault(id_bc_admin).then(private => {
+            const private_key = private.data.value;
+            set_mission_score_reward(id_bc_admin, private_key, req.body.mission_id, req.body.score, req.body.reward).then(data => {
+                res.status(200).send({ status: true, message: data });
+            }).catch(err => {
+                res.status(500).send({ status: false, error: err });
+            });
+        }).catch(err2 => {
+            console.log(err2);
+            res.status(500).send({ status: false, error: err2 });
+        });
+    }).catch(err1 => {
+        console.log(err1);
+        res.status(500).send({ status: false, error: err1 });
     });
 }
 
@@ -310,14 +322,14 @@ function get_mission_user_paid(mission, user) {
     })
 }
 
-function set_mission_score_reward(mission, score, reward) {
+function set_mission_score_reward(addressfrom, privatekey,  mission, score, reward) {
     return new Promise((res, rej) => {
         request.post({
             headers: { 'content-type': 'application/json' },
             url: 'http://172.18.0.22:3001/evocoin/set_mission_score_reward',
             json: {
-                addressfrom: '0xe401862558e44fa2547b66a6c1d50c8492718997',
-                privatekey: '57a29559e91df761c933986caf25debac5e21f4056d4487150cdcaab5cd37096',
+                addressfrom: addressfrom,
+                privatekey: private_key,
                 mission_id: mission,
                 score: score,
                 reward: reward

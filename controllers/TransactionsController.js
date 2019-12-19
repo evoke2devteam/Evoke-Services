@@ -188,11 +188,11 @@ async function setMissionScore(req, res) {
                 res.status(500).send({ status: false, error: err });
             });
         }).catch(err2 => {
-            console.log(err2);
+            console.log("Fallo al private key");
             res.status(500).send({ status: false, error: err2 });
         });
     }).catch(err1 => {
-        console.log(err1);
+        console.log("Fallo al buscar admin");
         res.status(500).send({ status: false, error: err1 });
     });
 }

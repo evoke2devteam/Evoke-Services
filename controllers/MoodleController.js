@@ -49,30 +49,28 @@ async function listOfStatusUserByCourse(req, res) {
             }
             let activitiesIsArray = [];
             Promise.all(usersIdArray).then(data => {
-                for (let i = 0; i < courses.length; i++) {
-                    for (let j = 0; j < data[0].statuses.length; j++) {
-                        //console.log('User: ' + courses[i].id + ' /n Activity: ' + data[0].statuses[j].cmid); 
-                        userPaidArray.push(getMissionPaid(data[0].statuses[j].cmid, courses[i].id));
-                    }
-                }
+                // for (let i = 0; i < courses.length; i++) {
+                //     for (let j = 0; j < data[0].statuses.length; j++) {
+                //         //console.log('User: ' + courses[i].id + ' /n Activity: ' + data[0].statuses[j].cmid); 
+                //         userPaidArray.push(getMissionPaid(data[0].statuses[j].cmid, courses[i].id));
+                //     }
+                // }
                 for (let i = 0; i < data[0].statuses.length; i++) {
                     //console.log(data[0].statuses[i].cmid);
                     activitiesIsArray.push(get_mission_score_reward(data[0].statuses[i].cmid, 1));
                 }
-                Promise.all(userPaidArray).then(paid => {
+                //Promise.all(userPaidArray).then(paid => {
                     //console.log(paid);
                     Promise.all(activitiesIsArray).then(data2 => {
                         for (let i = 0; i < data.length; i++) {
                             courses[i].statuses = data[i].statuses;
                         }
-                        let iter = 0
                         for (let i = 0; i < courses.length; i++) {
                             for (let j = 0; j < courses[i].statuses.length; j++) {
                                 let name1 = activitiesInfo.map(e => { return e.id; }).indexOf(courses[i].statuses[j].cmid);
                                 courses[i].statuses[j].name = activitiesInfo[name1].name;
                                 courses[i].statuses[j].reward = data2[j].Reward;
-                                courses[i].statuses[j].paid_status = paid[iter].paid_status;
-                                iter++;
+                                //courses[i].statuses[j].paid_status = paid[iter].paid_status;
                             }
 
                         }
@@ -81,10 +79,10 @@ async function listOfStatusUserByCourse(req, res) {
                         console.log(err2)
                         res.status(500).send({ status: false, error: err });
                     });
-                }).catch(errPaid => {
-                    console.log(errPaid)
-                    res.status(500).send({ status: false, error: errPaid });
-                });
+                // }).catch(errPaid => {
+                //     console.log(errPaid)
+                //     res.status(500).send({ status: false, error: errPaid });
+                // });
             }).catch(err => {
                 console.log(err)
                 res.status(500).send({ status: false, error: err });

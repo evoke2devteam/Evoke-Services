@@ -31,19 +31,19 @@ function getCourses(req, res) {
 async function listOfStatusUserByCourse(req, res) {
     try {
         let courses = await core_enrol_get_enrolled_users(req.body.id);
-        //let activities = await core_course_get_contents(req.body.id);
+        let activities = await core_course_get_contents(req.body.id);
         let usersIdArray = [];
         let userPaidArray = [];
-        if (courses.length > 0 /* && activities.length > 0 */) {
-            //let activitiesInfo = [];
-            //for (let i = 0; i < activities.length; i++) {
-            //    for (let j = 0; j < activities[i].modules.length; j++) {
-            //        activitiesInfo.push({
-            //            id: activities[i].modules[j].id,
-            //            name: activities[i].modules[j].name
-            //        });
-            //    }
-            //}
+        if (courses.length > 0 && activities.length > 0 ) {
+            let activitiesInfo = [];
+            for (let i = 0; i < activities.length; i++) {
+                for (let j = 0; j < activities[i].modules.length; j++) {
+                    activitiesInfo.push({
+                        id: activities[i].modules[j].id,
+                        name: activities[i].modules[j].name
+                    });
+                }
+            }
             for (let i = 0; i < courses.length; i++) {
                 usersIdArray.push(core_completion_get_activities_completion_status(req.body.id, courses[i].id));
             }
@@ -68,8 +68,8 @@ async function listOfStatusUserByCourse(req, res) {
                         let iter = 0
                         for (let i = 0; i < courses.length; i++) {
                             for (let j = 0; j < courses[i].statuses.length; j++) {
-                                //let name1 = activitiesInfo.map(e => { return e.id; }).indexOf(courses[i].statuses[j].cmid);
-                                //courses[i].statuses[j].name = activitiesInfo[name1].name;
+                                let name1 = activitiesInfo.map(e => { return e.id; }).indexOf(courses[i].statuses[j].cmid);
+                                courses[i].statuses[j].name = activitiesInfo[name1].name;
                                 courses[i].statuses[j].reward = data2[j].Reward;
                                 courses[i].statuses[j].paid_status = paid[iter].paid_status;
                                 iter++;
@@ -93,7 +93,7 @@ async function listOfStatusUserByCourse(req, res) {
             res.status(404).send({ status: false, message: 'The course has no enrolled users' })
         }
     } catch (error) {
-        res.status(500).send({ status: false, message: '' });
+        res.status(500).send({ status: false, message: 'Unexpected error' });
     }
 }
 

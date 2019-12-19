@@ -180,10 +180,8 @@ async function getMissionPaid(req, res) {
 async function setMissionScore(req, res) {
     login(req.body.admin).then(data_admin => {
         const id_bc_admin = data_admin.data.id_bc;
-        console.log(id_bc_admin);
         findKeyVault(id_bc_admin).then(private => {
             const private_key = private.data.value;
-            console.log(private_key);
             set_mission_score_reward(id_bc_admin, private_key, req.body.mission_id, req.body.score, req.body.reward).then(data => {
                 res.status(200).send({ status: true, message: data });
             }).catch(err => {
@@ -332,7 +330,7 @@ function set_mission_score_reward(addressfrom, privatekey,  mission, score, rewa
             url: 'http://172.18.0.22:3001/evocoin/set_mission_score_reward',
             json: {
                 addressfrom: addressfrom,
-                privatekey: private_key,
+                privatekey: privatekey,
                 mission_id: mission,
                 score: score,
                 reward: reward
